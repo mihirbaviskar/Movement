@@ -1,13 +1,20 @@
+
+#define Kp = a
+#define Ki = b
+//b<a
+#define Kd = c
+//c>a
+
 void forwards_pid_mihir(int side, double target, double position, int speed)
 {
     double current = analog(0);
     double error = target - current;
-    double last_error;
+    double proportional;
     double integral;
     double integration;
+    double last_error;
     double derivative;
     double derivation;
-    double proportional;
     double powerup;
     double powerdown;
     double correction;
@@ -29,19 +36,22 @@ void forwards_pid_mihir(int side, double target, double position, int speed)
             proportional = Kp * error;
             //increasing Kp makes it more drastic decreasing it makes it smoother
             
-            if(counter!=0){
-            derivative=last_error-error;
-            derivation=Kd * derivative;
-            correction = proportional + integration + derivation;
-        	 }
-        	else{
-        	correction = proportional
-          printf("\t ONLY USING PROPORTIONAL");
-        	}
-          if(error<0){
-            integration=abs(integration)*-1
-            integration=abs(derivation)*-1
-            }
+                if(counter!=0){
+                    //This is because last_error is still 0 and will only have a value at the second iteration
+                    derivative=last_error-error;
+                    derivation=Kd * derivative;
+                    correction = proportional + integration + derivation;
+        	        }
+                else{
+                    correction = proportional
+                    printf("\t ONLY USING PROPORTIONAL");
+                    }
+                if(error<0){
+                    integration=abs(integration)*-1
+                    derivation=abs(derivation)*-1
+                    //you have to use a certain header file to use abs
+                    //this may make it too drastic
+                }
           
             printf("proportional: %lf   integration: %lf  derivation: %lf\n",proportional,integration,derivation);
             powerup = speed + correction;
@@ -53,6 +63,7 @@ void forwards_pid_mihir(int side, double target, double position, int speed)
             //printf("%i , %lfa , %lfb , %lfc , %i,  %lfa + %lfb + %lfc",counter,error, integral, derivative,counter,error, integral, derivative);
             //use to figure out defines by pasting list in excel and the pasting that in desmos.Use slider to adjust values till graph matches sin(x)/x
             last_error=error;
+            //used to find previous error
             counter=counter+1
         }
     }
