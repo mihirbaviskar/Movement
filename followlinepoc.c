@@ -61,7 +61,7 @@ void forwards_pid_mihir(int side, double target, double position, int speed)
             mrp(LEFTWHEEL,powerdown, 4);							
             mrp(RIGHTWHEEL,powerup, 4);
             //printf("%i , %lfa , %lfb , %lfc , %i,  %lfa + %lfb + %lfc",counter,error, integral, derivative,counter,error, integral, derivative);
-            //use to figure out defines by pasting list in excel and the pasting that in desmos.Use slider to adjust values till graph matches sin(x)/x
+            //use to figure out define constants by pasting list in excel and the pasting that in desmos.Use slider to adjust values till graph matches sin(x)/x
             last_error=error;
             //used to find previous error
             counter=counter+1
