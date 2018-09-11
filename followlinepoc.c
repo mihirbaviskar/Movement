@@ -3,9 +3,9 @@
 #define Ki = b
 //b<a
 #define Kd = c
-//c>a
+//c~a
 
-void forwards_pid_mihir(int side, double target, double position, int speed)
+void forwards_pid_the_real_one(int side, double target, double position, int speed)
 {
     double current = analog(0);
     double error = target - current;
@@ -20,7 +20,6 @@ void forwards_pid_mihir(int side, double target, double position, int speed)
     double correction;
     int counter=0;
     cmpc(LEFTWHEEL);
-
     if(side == 1)		//RIGHTSIDE
     {
         while(gmpc(LEFTWHEEL) < position)
@@ -35,20 +34,11 @@ void forwards_pid_mihir(int side, double target, double position, int speed)
             //Ki is some arbitrary value, Ki should most likely be lower than Kd and Kp
             proportional = Kp * error;
             //increasing Kp makes it more drastic decreasing it makes it smoother
-            
-                if(counter!=0){
-                    //This is because last_error is still 0 and will only have a value at the second iteration
-                    derivative=last_error-error;
-                    derivation=Kd * derivative;
-                    correction = proportional + integration + derivation;
-        	        }
-                else{
-                    correction = proportional
-                    printf("\t ONLY USING PROPORTIONAL");
-                    }
+             derivative=error-last_error;
+             derivation=Kd * derivative;
+             correction = proportional + integration + derivation;
                 if(error<0){
                     integration=abs(integration)*-1
-                    derivation=abs(derivation)*-1
                     //you have to use a certain header file to use abs
                     //this may make it too drastic
                 }
