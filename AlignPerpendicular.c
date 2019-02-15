@@ -1,102 +1,44 @@
-#define Kp = a
-#define Ki = b
-//b<a
-#define Kd = c
-//c~a
+#define KPR
+#define KPL
 
-void align(int side, double target, double position, int speed)
+void align(int side, double target)
 {
-    double current = analog(0);
-    double error = target - current;
-    double proportional;
-    double integral;
-    double integration;
-    double last_error;
-    double derivative;
-    double derivation;
-    double powerup;
-    double powerdown;
-    double correction;
-    int counter=0;
+    double currentleft = get_create_lcliff_amt();
+    double currentright = get_create_rcliff_amt();
+    double errorleft = currentleft-target;
+    double errorright = currentright-target;
+    double lproportional;
+    double rproportional;
     cmpc(LEFTWHEEL);
-    if(side == 1){		//RIGHTSIDE
+    if(side == 1){		//UNDERLINE
         
-        while(gmpc(LEFTWHEEL) < position)
-        {
-            current = analog(0);
-            error = target - current;
-            integral=integral+error;
-            //Sum of all errors(integral) should approach zero.
-            //If integral is mostly positive then you are mostly on white and straying to the left
-            //If integral is mostly negative then you are mostly on black and straying to the right
-            integration=KI*integral;
-            //Ki is some arbitrary value, Ki should most likely be lower than Kd and Kp
-            proportional = KP * error;
-            //increasing Kp makes it more drastic decreasing it makes it smoother
-             derivative=error-last_error;
-             derivation=KD * derivative;
-             
-                if(integration>200 || integration<-500){
-                    integral=0;
-                    integration=0;
-                    printf("\tIntegration cleared");
-                    //integration=abs(integration)*-1
-                    //you have to use a certain header file to use abs
-                    //this may make it too drastic
-                }
-          	correction = proportional + integration + derivation;
-            printf("proportional: %lf   integration: %lf  derivation: %lf\n",proportional,integration,derivation);
-            powerup = speed + correction;
-            powerdown = speed - correction;
-            printf("powerup: %lf\n",powerup);
-            printf("powerdown: %lf\n",powerdown);
-            mrp(LEFTWHEEL,powerdown, 8);							
-            mrp(RIGHTWHEEL,powerup, 8);
-            //printf("%i , %lfa , %lfb , %lfc , %i,  %lfa + %lfb + %lfc\n",counter,error, integral, derivative,counter,error, integral, derivative);
-            //use to figure out define constants by pasting list in excel and the pasting that in desmos.Use slider to adjust values till graph matches sin(x)/x
-            last_error=error;
-            //used to find previous error
-            counter=counter+1;
-        	}
+        while()                 //not on ngrey
+           {
+		 double currentleft = get_create_lcliff_amt();
+		 double currentright = get_create_rcliff_amt();
+		 double errorleft = currentleft-target;
+    		 double errorright = currentright-target;
+		 lproportional = KPL * errorleft;
+		 rproportional = KPR * errorright;
+		 printf("lproportional: %lf\n",lproportional);
+		 printf("rproportional: %lf\n",rproportional);
+		 create_drive_direct(lproportional,rproportional);
+           }
         }
     
-        if(side == 2){		//LEFTSIDE
+     if(side == 2){		//OVERLINE
         
-        while(gmpc(LEFTWHEEL) < position)
-        {
-            current = analog(0);
-            error = target - current;
-            integral=integral+error;
-            //Sum of all errors(integral) should approach zero.
-            //If integral is mostly positive then you are mostly on white and straying to the left
-            //If integral is mostly negative then you are mostly on black and straying to the right
-            integration=KI*integral;
-            //Ki is some arbitrary value, Ki should most likely be lower than Kd and Kp
-            proportional = KP * error;
-            //increasing Kp makes it more drastic decreasing it makes it smoother
-             derivative=error-last_error;
-             derivation=KD * derivative;
-                if(integration>200 || integration<-500){
-                    integral=0;
-                    integration=0;
-                    printf("\tIntegration cleared");
-                    //integration=abs(integration)*-1
-                    //you have to use a certain header file to use abs
-                    //this may make it too drastic
-                }
-            correction = proportional + integration + derivation;
-            printf("proportional: %lf   integration: %lf  derivation: %lf\n",proportional,integration,derivation);
-            powerup = speed + correction;
-            powerdown = speed - correction;
-            printf("powerup: %lf\n",powerup);
-            printf("powerdown: %lf\n",powerdown);
-            mrp(LEFTWHEEL,powerdown, 8);							
-            mrp(RIGHTWHEEL,powerup, 8);
-            //printf("%i , %lfa , %lfb , %lfc , %i,  %lfa + %lfb + %lfc\n",counter,error, integral, derivative,counter,error, integral, derivative);
-            //use to figure out define constants by pasting list in excel and the pasting that in desmos.Use slider to adjust values till graph matches sin(x)/x
-            last_error=error;
-            //used to find previous error
-            counter=counter+1;
-        	}
-        }
-	}
+        while()                 //not on grey
+           {
+		 double currentleft = get_create_lcliff_amt();
+		 double currentright = get_create_rcliff_amt();
+		 double errorleft = target-currentleft;
+    		 double errorright = target-currentright;
+		 lproportional = KPL * errorleft;
+		 rproportional = KPR * errorright;
+		 printf("lproportional: %lf\n",lproportional);
+		 printf("rproportional: %lf\n",rproportional);
+		 create_drive_direct(lproportional,rproportional);
+           }
+      }
+}
