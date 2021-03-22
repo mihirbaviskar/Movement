@@ -1,2 +1,2 @@
 # PID_Experimental
-Just playing around with PID
+Created a library of functions for the IHS Robotics Team to use in competition
